@@ -8,14 +8,13 @@
 #include "List.h"
 
 template<class T>
-class Queue : List<T> {
+class Queue : public List<T> {
     using List<T>::node;
-#define nodeTail node
 public:
     Queue() = default;
 
     explicit Queue(T data) {
-        PushBack(data);
+        Push(data);
     }
 
     Queue(const Queue<T> &queue) noexcept {
@@ -23,26 +22,27 @@ public:
     }
 
     Queue<T>(Queue<T> &&queue) noexcept: nodeHead(queue.nodeHead) {
-        node=queue.node;
+        node = queue.node;
         queue.nodeHead = nullptr;
-        queue.nodeTail = nullptr;
+        queue.node = nullptr;
     }
 
-    ~Queue() {
+    virtual ~Queue() {
         Del();
     }
 
-    void PushBack(T data) {
-        if (nodeTail != nullptr) {
-            nodeTail->connectedNode = new Node<T>(data);
-            nodeTail = nodeTail->connectedNode;
+    void Push(T data) {
+        if (node != nullptr) {
+            node->connectedNode = new Node<T>(data);
+            node = node->connectedNode;
         } else {
-            nodeTail = new Node<T>(data);
-            nodeHead = nodeTail;
+            node = new Node<T>(data);
+            nodeHead = node;
         }
+        List<T>::size++;
     }
 
-    T PopFront() {
+    T Pop() {
         if (nodeHead == nullptr)
             throw List<T>::ERR_EMPTY;
         Node<T> *tempNode = nodeHead;
@@ -50,9 +50,10 @@ public:
         nodeData = nodeHead->data;
         nodeHead = nodeHead->connectedNode;
         if (nodeHead == nullptr)
-            nodeTail = nullptr;
+            node = nullptr;
 
         delete tempNode;
+        List<T>::size--;
         return nodeData;
     }
 
@@ -66,10 +67,10 @@ public:
         if (&queue == this)
             return *this;
         this->Del();
-        nodeTail = queue.nodeTail;
+        node = queue.node;
         nodeHead = queue.nodeHead;
         queue.nodeHead = nullptr;
-        queue.nodeTail = nullptr;
+        queue.node = nullptr;
         return *this;
     }
 
@@ -98,16 +99,16 @@ private:
     void QueueCopy(const Queue<T> &queue) {
         Node<T> *itNode = queue.nodeHead;
         while (itNode) {
-            this->PushBack(itNode->data);
+            this->Push(itNode->data);
             itNode = itNode->connectedNode;
         }
     }
 
     void Del() {
         while (nodeHead != nullptr) {
-            this->PopFront();
+            this->Pop();
         }
-        nodeTail = nullptr;
+        node = nullptr;
     }
 };
 
