@@ -11,6 +11,8 @@
 template<class T>
 class List {
 public:
+    virtual ~List() = default;
+
     enum ERR_CODE {
         ERR_EMPTY
     };
