@@ -26,7 +26,7 @@ public:
         stack.node = nullptr;
     }
 
-    ~Stack() {
+    virtual ~Stack() {
         Del();
     }
 
