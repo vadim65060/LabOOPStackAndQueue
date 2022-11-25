@@ -71,23 +71,29 @@ public:
 
 private:
 
-    void StackCopy(const Stack<T> &stack) {
-        Node<T> *itNode = stack.nodeTail;
-        while (itNode) {
-            this->Push(itNode->data);
-            itNode = itNode->connectedNode;
+    void StackCopy(const Stack &stack) {
+        Node<T> *temp = stack.nodeTail;
+        if (temp == nullptr) return;
+
+        Push(temp->data);
+        if (temp->connectedNode == nullptr) return;
+
+        temp = temp->connectedNode;
+        Node<T> *lastTrue = nodeTail;
+        Push(temp->data);
+        Node<T> *preLast = nodeTail;
+        preLast->connectedNode = nullptr;
+        lastTrue->connectedNode = preLast;
+        nodeTail = lastTrue;
+
+        while (temp->connectedNode) {
+            temp = temp->connectedNode;
+            Push(temp->data);
+            nodeTail->connectedNode = nullptr;
+            preLast->connectedNode = nodeTail;
+            preLast = nodeTail;
+            nodeTail = lastTrue;
         }
-        Node<T> *lastNode = this->nodeTail;
-        itNode = this->nodeTail->connectedNode;
-        while (itNode->connectedNode != nullptr) {
-            Node<T> *tempNode = itNode->connectedNode;
-            itNode->connectedNode = lastNode;
-            lastNode = itNode;
-            itNode = tempNode;
-        }
-        itNode->connectedNode = lastNode;
-        this->nodeTail->connectedNode = nullptr;
-        this->nodeTail = itNode;
     }
 
     void Del() {
