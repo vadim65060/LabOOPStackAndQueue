@@ -24,13 +24,16 @@ public:
     virtual const T &GetFront() const = 0;
 
     bool IsEmpty() const {
-        return node == nullptr;
+        return nodeTail == nullptr;
     }
 
     int Size() const { return size; }
 
     friend std::ostream &operator<<(std::ostream &os, List<T> &list) {
-        list.Print(os);
+        for (auto node: list) {
+            os << node.data << ' ';
+        }
+        os << '\n';
         return os;
     }
 
@@ -41,11 +44,93 @@ public:
         return is;
     }
 
+    class const_iterator;
+
+    struct iterator {
+
+        using iterator_category = std::forward_iterator_tag;
+        using difference_type = std::ptrdiff_t;
+        using value_type = Node<T>;
+        using pointer = Node<T> *;
+        using reference = Node<T> &;
+
+        explicit iterator(pointer ptr = nullptr) : _ptr(ptr) {}
+
+        reference operator*() const { return *_ptr; }
+
+        pointer operator->() { return _ptr; }
+
+        iterator &operator++() {
+            _ptr = _ptr->connectedNode;
+            return *this;
+        }
+
+        iterator operator++(int) {
+            iterator tmp = *this;
+            ++(*this);
+            return tmp;
+        }
+
+        bool operator==(const iterator &it) { return _ptr == it._ptr; };
+
+        bool operator!=(const iterator &it) { return _ptr != it._ptr; };
+
+        friend const_iterator;
+    private:
+        pointer _ptr;
+    };
+
+    virtual iterator begin() { return iterator(nodeTail); }
+
+    virtual iterator end() { return iterator(); }
+
+    struct const_iterator {
+
+        using iterator_category = std::forward_iterator_tag;
+        using difference_type = std::ptrdiff_t;
+        using value_type = Node<T>;
+        using pointer = const Node<T> *;
+        using reference = const Node<T> &;
+
+        explicit const_iterator(pointer ptr = nullptr) : _ptr(ptr) {}
+
+        explicit const_iterator(const iterator &ptr) : _ptr(ptr._ptr) {};
+
+        reference operator*() const { return *(_ptr->data); }
+
+        pointer operator->() { return _ptr->data; }
+
+        const_iterator &operator++() {
+            _ptr = _ptr->connectedNode;
+            return *this;
+        }
+
+        const_iterator operator++(int) {
+            const_iterator tmp = *this;
+            ++(*this);
+            return tmp;
+        }
+
+        bool operator==(const const_iterator &it) const { return _ptr == it.m_ptr; };
+
+        bool operator!=(const const_iterator &it) const { return _ptr != it.m_ptr; };
+
+    private:
+        pointer _ptr;
+    };
+
+    virtual const_iterator begin() const { return const_iterator(nodeTail); }
+
+    virtual const_iterator end() const { return const_iterator(); }
+
+    virtual const_iterator cbegin() const { return const_iterator(nodeTail); }
+
+    virtual const_iterator cend() const { return const_iterator(); }
+
 protected:
-    Node<T> *node = nullptr;
+    Node<T> *nodeTail = nullptr;
     int size = 0;
 
-    virtual void Print(std::ostream &os) = 0;
 };
 
 

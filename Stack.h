@@ -10,7 +10,7 @@
 
 template<class T>
 class Stack : public List<T> {
-    using List<T>::node;
+    using List<T>::nodeTail;
 public:
     Stack() = default;
 
@@ -22,8 +22,8 @@ public:
         StackCopy(stack);
     }
 
-    Stack<T>(Stack<T> &&stack) noexcept: List<T>::node(stack.node) {
-        stack.node = nullptr;
+    Stack<T>(Stack<T> &&stack) noexcept: List<T>::node(stack.nodeTail) {
+        stack.nodeTail = nullptr;
     }
 
     virtual ~Stack() {
@@ -31,33 +31,33 @@ public:
     }
 
     void Push(T data) {
-        node = new Node<T>(data, node);
+        nodeTail = new Node<T>(data, nodeTail);
         List<T>::size++;
     }
 
     T Pop() {
-        if (node == nullptr)
+        if (nodeTail == nullptr)
             throw List<T>::ERR_EMPTY;
-        Node<T> *tempNode = node;
-        T nodeData = node->data;
-        node = node->connectedNode;
+        Node<T> *tempNode = nodeTail;
+        T nodeData = nodeTail->data;
+        nodeTail = nodeTail->connectedNode;
         delete tempNode;
         List<T>::size--;
         return nodeData;
     }
 
     const T &GetFront() const {
-        if (node == nullptr)
+        if (nodeTail == nullptr)
             throw List<T>::ERR_EMPTY;
-        return node->data;
+        return nodeTail->data;
     }
 
     Stack<T> &operator=(Stack<T> &&stack) noexcept {
         if (&stack == this)
             return *this;
         this->Del();
-        node = stack.node;
-        stack.node = nullptr;
+        nodeTail = stack.nodeTail;
+        stack.nodeTail = nullptr;
         return *this;
     }
 
@@ -69,28 +69,16 @@ public:
         return *this;
     }
 
-protected:
-
-    void Print(std::ostream &os) {
-        Node<T> *itNode = node;
-        os << "tail ";
-        while (itNode) {
-            os << itNode->data << ' ';
-            itNode = itNode->connectedNode;
-        }
-        os << "\n";
-    }
-
 private:
 
     void StackCopy(const Stack<T> &stack) {
-        Node<T> *itNode = stack.node;
+        Node<T> *itNode = stack.nodeTail;
         while (itNode) {
             this->Push(itNode->data);
             itNode = itNode->connectedNode;
         }
-        Node<T> *lastNode = this->node;
-        itNode = this->node->connectedNode;
+        Node<T> *lastNode = this->nodeTail;
+        itNode = this->nodeTail->connectedNode;
         while (itNode->connectedNode != nullptr) {
             Node<T> *tempNode = itNode->connectedNode;
             itNode->connectedNode = lastNode;
@@ -98,12 +86,12 @@ private:
             itNode = tempNode;
         }
         itNode->connectedNode = lastNode;
-        this->node->connectedNode = nullptr;
-        this->node = itNode;
+        this->nodeTail->connectedNode = nullptr;
+        this->nodeTail = itNode;
     }
 
     void Del() {
-        while (node != nullptr) {
+        while (nodeTail != nullptr) {
             this->Pop();
         }
     }

@@ -9,7 +9,7 @@
 
 template<class T>
 class Queue : public List<T> {
-    using List<T>::node;
+    using List<T>::nodeTail;
 public:
     Queue() = default;
 
@@ -22,9 +22,9 @@ public:
     }
 
     Queue<T>(Queue<T> &&queue) noexcept: nodeHead(queue.nodeHead) {
-        node = queue.node;
+        nodeTail = queue.nodeTail;
         queue.nodeHead = nullptr;
-        queue.node = nullptr;
+        queue.nodeTail = nullptr;
     }
 
     virtual ~Queue() {
@@ -32,12 +32,12 @@ public:
     }
 
     void Push(T data) {
-        if (node != nullptr) {
-            node->connectedNode = new Node<T>(data);
-            node = node->connectedNode;
+        if (nodeTail != nullptr) {
+            nodeTail->connectedNode = new Node<T>(data);
+            nodeTail = nodeTail->connectedNode;
         } else {
-            node = new Node<T>(data);
-            nodeHead = node;
+            nodeTail = new Node<T>(data);
+            nodeHead = nodeTail;
         }
         List<T>::size++;
     }
@@ -50,7 +50,7 @@ public:
         nodeData = nodeHead->data;
         nodeHead = nodeHead->connectedNode;
         if (nodeHead == nullptr)
-            node = nullptr;
+            nodeTail = nullptr;
 
         delete tempNode;
         List<T>::size--;
@@ -67,10 +67,10 @@ public:
         if (&queue == this)
             return *this;
         this->Del();
-        node = queue.node;
+        nodeTail = queue.nodeTail;
         nodeHead = queue.nodeHead;
         queue.nodeHead = nullptr;
-        queue.node = nullptr;
+        queue.nodeTail = nullptr;
         return *this;
     }
 
@@ -82,16 +82,14 @@ public:
         return *this;
     }
 
-protected:
+    using iterator = typename List<T>::iterator;
+    using const_iterator = typename List<T>::const_iterator;
 
-    void Print(std::ostream &os) {
-        Node<T> *itNode = nodeHead;
-        while (itNode) {
-            os << itNode->data << ' ';
-            itNode = itNode->connectedNode;
-        }
-        os << "\n";
-    }
+    iterator begin() { return iterator(nodeHead); }
+
+    const_iterator begin() const { return const_iterator(nodeHead); }
+
+    const_iterator cbegin() const { return const_iterator(nodeHead); }
 
 private:
     Node<T> *nodeHead = nullptr;
@@ -108,7 +106,7 @@ private:
         while (nodeHead != nullptr) {
             this->Pop();
         }
-        node = nullptr;
+        nodeTail = nullptr;
     }
 };
 
