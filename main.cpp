@@ -8,16 +8,17 @@ void TestStack() {
     st.Push(4);
     st.Push(5);
     Stack<int> a(st);
-    std::cout<<st;
-    std::cout<<a;
+    std::cout << st;
+    std::cout << a;
+    std::cout <<"stack it== test "<< (st.cbegin() == st.begin())<<' '<<(st.cbegin() != st.begin())<<'\n';
 }
 
 void TestQueue() {
     Queue<int> queue(1);
     queue.Push(2);
-    std::cout<<queue;
+    std::cout << queue;
     queue.Pop();
-    std::cout<<queue;
+    std::cout << queue;
     Queue<int> q2(queue);
     q2.Pop();
     std::cout << "q2 empty: " << q2.IsEmpty();
