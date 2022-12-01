@@ -44,7 +44,7 @@ public:
         return is;
     }
 
-    class const_iterator;
+    struct const_iterator;
 
     struct iterator {
 
@@ -73,7 +73,11 @@ public:
 
         bool operator==(const iterator &it) { return _ptr == it._ptr; };
 
+        bool operator==(const const_iterator &it) { return const_iterator(_ptr) == it; };
+
         bool operator!=(const iterator &it) { return _ptr != it._ptr; };
+
+        bool operator!=(const const_iterator &it) { return const_iterator(_ptr) != it; };
 
         friend const_iterator;
     private:
@@ -113,7 +117,11 @@ public:
 
         bool operator==(const const_iterator &it) const { return _ptr == it.m_ptr; };
 
+        bool operator==(const iterator &it) { return _ptr == const_iterator(it)._ptr; };
+
         bool operator!=(const const_iterator &it) const { return _ptr != it.m_ptr; };
+
+        bool operator!=(const iterator &it) { return _ptr != const_iterator(it)._ptr; };
 
     private:
         pointer _ptr;
