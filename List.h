@@ -31,7 +31,7 @@ public:
 
     friend std::ostream &operator<<(std::ostream &os, List<T> &list) {
         for (auto node: list) {
-            os << node.data << ' ';
+            os << node << ' ';
         }
         os << '\n';
         return os;
@@ -56,9 +56,9 @@ public:
 
         explicit iterator(pointer ptr = nullptr) : _ptr(ptr) {}
 
-        reference operator*() const { return *_ptr; }
+        T & operator*() const { return _ptr->data; }
 
-        pointer operator->() { return _ptr; }
+        T * operator->() { return _ptr->data; }
 
         iterator &operator++() {
             _ptr = _ptr->connectedNode;
