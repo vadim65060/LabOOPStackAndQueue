@@ -115,11 +115,11 @@ public:
             return tmp;
         }
 
-        bool operator==(const const_iterator &it) const { return _ptr == it.m_ptr; };
+        bool operator==(const const_iterator &it) const { return _ptr == it._ptr; };
 
         bool operator==(const iterator &it) { return _ptr == const_iterator(it)._ptr; };
 
-        bool operator!=(const const_iterator &it) const { return _ptr != it.m_ptr; };
+        bool operator!=(const const_iterator &it) const { return _ptr != it._ptr; };
 
         bool operator!=(const iterator &it) { return _ptr != const_iterator(it)._ptr; };
 
