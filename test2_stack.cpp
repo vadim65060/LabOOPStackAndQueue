@@ -25,7 +25,7 @@ template <class T, class C> T sum (const C& c)
 int main()
 {
     Stack<int> s1, s2;
-    numerate f(100);
+    numerate<int> f(100);
 
     s1.Push(1);
     s1.Push(2);
