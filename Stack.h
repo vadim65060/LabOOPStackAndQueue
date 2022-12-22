@@ -22,7 +22,8 @@ public:
         StackCopy(stack);
     }
 
-    Stack<T>(Stack<T> &&stack) noexcept: List<T>::node(stack.nodeTail) {
+    Stack<T>(Stack<T> &&stack) noexcept{
+        nodeTail = stack.nodeTail;
         stack.nodeTail = nullptr;
     }
 
