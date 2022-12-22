@@ -100,9 +100,9 @@ public:
 
         explicit const_iterator(const iterator &ptr) : _ptr(ptr._ptr) {};
 
-        T & operator*() const { return _ptr->data; }
+        const T & operator*() const { return _ptr->data; }
 
-        T * operator->() { return _ptr->data; }
+        const T * operator->() { return _ptr->data; }
 
         const_iterator &operator++() {
             _ptr = _ptr->connectedNode;
