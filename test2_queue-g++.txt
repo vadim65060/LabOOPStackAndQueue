@@ -1,8 +1,0 @@
-In file included from Queue.h:8,
-                 from test2_queue.cpp:4:
-List.h: В конкретизации «T& List<T>::const_iterator::operator*() const [with T = int]»:
-test2_queue.cpp:21:15:   требуемый из «T sum(const C&) [with T = int; C = List<int>]»
-test2_queue.cpp:57:31:   required from here
-List.h:103:46: ошибка: binding reference of type «int&» to «const int» discards qualifiers
-  103 |         T & operator*() const { return _ptr->data; }
-      |                                        ~~~~~~^~~~

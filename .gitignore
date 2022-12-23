@@ -1,5 +1,5 @@
-test_queue
-test_stack
+test*_queue
+test*_stack
 
 
 ### C++ template
